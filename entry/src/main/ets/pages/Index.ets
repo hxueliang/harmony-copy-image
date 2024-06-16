@@ -19,19 +19,34 @@ struct FileCopy {
     $r("app.media.010")
   ]
 
+  @State
+  list2: Resource[] = [
+    $r("app.media.yellow"),
+    $r("app.media.white"),
+    $r("app.media.red"),
+    $r("app.media.pink"),
+    $r("app.media.orange"),
+    $r("app.media.grey"),
+    $r("app.media.green"),
+    $r("app.media.girl"),
+    $r("app.media.boy"),
+    $r("app.media.blue"),
+    $r("app.media.purple"),
+    $r("app.media.blueness")
+  ]
 
   // 保存沙箱图片到相册
-  async saveImgToAssets() {
+  async saveImgToAssets(list: Resource[]) {
     try {
       let index = 0
-      while (index < this.list.length) {
+      while (index < list.length) {
         let context = getContext();
         let phAccessHelper = photoAccessHelper.getPhotoAccessHelper(context);
         // Creating a Media File
         let uri = await phAccessHelper.createAsset(photoAccessHelper.PhotoType.IMAGE, 'jpg');
         // Open the created media file and read the local file and convert it to ArrayBuffer for easy filling.
         let file = await fileIo.open(uri, fileIo.OpenMode.READ_WRITE);
-        let buffer = getContext(this).resourceManager.getMediaContentSync(this.list[index].id);
+        let buffer = getContext().resourceManager.getMediaContentSync(list[index].id);
         // Write the read ArrayBuffer to the new media file.
         let writeLen = await fileIo.write(file.fd, buffer.buffer);
         await fileIo.close(file);
@@ -46,22 +61,40 @@ struct FileCopy {
 
   build() {
     Column({ space: 10 }) {
-      Row() {
+      Row({space:5}) {
         SaveButton()
           .onClick((event, result: SaveButtonOnClickResult) => {
             if (result === SaveButtonOnClickResult.SUCCESS) {
-              this.saveImgToAssets()
+              this.saveImgToAssets(this.list)
+            }
+          })
+
+        SaveButton()
+          .onClick((event, result: SaveButtonOnClickResult) => {
+            if (result === SaveButtonOnClickResult.SUCCESS) {
+              this.saveImgToAssets(this.list2)
             }
           })
       }
       .justifyContent(FlexAlign.Center)
       .width('100%')
-      GridRow({ columns: 2 }) {
+      GridRow({ columns: 5 }) {
         ForEach(this.list, (item: string) => {
           GridCol() {
             Image(item)
-              .height(150)
-              .height(150)
+              .width('100%')
+              .borderRadius(4)
+          }
+          .margin({
+            top: 10
+          })
+        })
+      }
+      GridRow({ columns: 5 }) {
+        ForEach(this.list2, (item: string) => {
+          GridCol() {
+            Image(item)
+              .width('100%')
               .borderRadius(4)
           }
           .margin({
