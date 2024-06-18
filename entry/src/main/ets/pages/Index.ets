@@ -35,15 +35,24 @@ struct FileCopy {
     $r("app.media.blueness")
   ]
 
+  @State
+  list3: Resource[] = [
+    $r("app.media.bb"),
+  ]
+
   // 保存沙箱图片到相册
-  async saveImgToAssets(list: Resource[]) {
+  async saveImgToAssets(
+    list: Resource[],
+    PhotoType: photoAccessHelper.PhotoType = photoAccessHelper.PhotoType.IMAGE,
+    extendName: string = 'jpg'
+  ) {
     try {
       let index = 0
       while (index < list.length) {
         let context = getContext();
         let phAccessHelper = photoAccessHelper.getPhotoAccessHelper(context);
         // Creating a Media File
-        let uri = await phAccessHelper.createAsset(photoAccessHelper.PhotoType.IMAGE, 'jpg');
+        let uri = await phAccessHelper.createAsset(PhotoType, extendName);
         // Open the created media file and read the local file and convert it to ArrayBuffer for easy filling.
         let file = await fileIo.open(uri, fileIo.OpenMode.READ_WRITE);
         let buffer = getContext().resourceManager.getMediaContentSync(list[index].id);
@@ -75,6 +84,13 @@ struct FileCopy {
               this.saveImgToAssets(this.list2)
             }
           })
+
+        SaveButton()
+          .onClick((event, result: SaveButtonOnClickResult) => {
+            if (result === SaveButtonOnClickResult.SUCCESS) {
+              this.saveImgToAssets(this.list3, photoAccessHelper.PhotoType.VIDEO, 'mp4')
+            }
+          })
       }
       .justifyContent(FlexAlign.Center)
       .width('100%')
@@ -102,7 +118,21 @@ struct FileCopy {
           })
         })
       }
-
+      GridRow({ columns: 5 }) {
+        ForEach(this.list3, (item: string) => {
+          GridCol() {
+            Video({
+              src: item
+            })
+              .width('100%')
+              .aspectRatio(1)
+              .borderRadius(4)
+          }
+          .margin({
+            top: 10
+          })
+        })
+      }
     }
 
   }
