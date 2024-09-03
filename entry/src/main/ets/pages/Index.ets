@@ -71,12 +71,12 @@ struct FileCopy {
   build() {
     Column({ space: 10 }) {
       Row({space:5}) {
-        SaveButton()
-          .onClick((event, result: SaveButtonOnClickResult) => {
-            if (result === SaveButtonOnClickResult.SUCCESS) {
-              this.saveImgToAssets(this.list)
-            }
-          })
+        // SaveButton()
+        //   .onClick((event, result: SaveButtonOnClickResult) => {
+        //     if (result === SaveButtonOnClickResult.SUCCESS) {
+        //       this.saveImgToAssets(this.list)
+        //     }
+        //   })
 
         SaveButton()
           .onClick((event, result: SaveButtonOnClickResult) => {
@@ -94,18 +94,18 @@ struct FileCopy {
       }
       .justifyContent(FlexAlign.Center)
       .width('100%')
-      GridRow({ columns: 5 }) {
-        ForEach(this.list, (item: string) => {
-          GridCol() {
-            Image(item)
-              .width('100%')
-              .borderRadius(4)
-          }
-          .margin({
-            top: 10
-          })
-        })
-      }
+      // GridRow({ columns: 5 }) {
+      //   ForEach(this.list, (item: string) => {
+      //     GridCol() {
+      //       Image(item)
+      //         .width('100%')
+      //         .borderRadius(4)
+      //     }
+      //     .margin({
+      //       top: 10
+      //     })
+      //   })
+      // }
       GridRow({ columns: 5 }) {
         ForEach(this.list2, (item: string) => {
           GridCol() {
